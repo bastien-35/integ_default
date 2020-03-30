@@ -825,8 +825,11 @@ def __runConfigMail(fileConfig,filehtml,index,logfile):
 					msg.attach(part)
 				else : 
 					logfile.write( "Probleme Pièce jointe  '" + PJ + "' absente : " "'", 110)
-		gmail_user = "fberragu@gmail.com"  
-		gmail_password = "Sefas123"
+		my_config_mail = os.getcwd() + os.sep + "config_mail.txt"
+		if not os.path.isfile(my_config_mail) :
+			logfile.write( "Probleme config_mail.txt", 110)
+		gmail_user = getConfAcc(os.getcwd() + os.sep + "config_mail.txt",u"user")
+		gmail_password = getConfAcc(os.getcwd() + os.sep + "config_mail.txt",u"password")
 		try :
 			s = smtplib.SMTP_SSL('smtp.gmail.com', 465)
 			s.ehlo()
@@ -949,12 +952,15 @@ def CheckEnvoiParMail(file):
 		pass
 
 def getConfAcc(file,cle):
-	buffer=open(file,'r')
-	for line in buffer.read():
-		cle_courante,valeur_courante = line.split("\t")
-		if cle_courante == cle :
-			return valeur_courante
-	buffer.close()
+	try :
+		buffer=open(file,'r')
+		for line in buffer:
+			cle_courante,valeur_courante = line.strip('\r\n').split("\t")
+			if cle_courante == cle :
+				return valeur_courante
+		buffer.close()
+	except Exception,e :
+		print"Probleme lecture fichier: "+str(e)
 
 def CalcIdCle(IdAffilie):
 	mult = 128

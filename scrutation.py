@@ -242,8 +242,9 @@ def do_stuff(QueueExecution, idxthread, file, nom_complet):
 		if int(coderetour) == 0:
 			''' Le process s'est execute correctement on supprime le repertoire de traitement '''
 			CleanFichiersAnnexes(fichier_trt_acc)
-			shutil.rmtree(rep_traitement)
-			logfile.write("Suppression du repertoire de traitement " + rep_traitement, 0)
+			if DEBUG != 1:
+				shutil.rmtree(rep_traitement)
+				logfile.write("Suppression du repertoire de traitement " + rep_traitement, 0)
 
 		else:
 			''' on deplace le repertoire dans le repertoire d'erreur '''
@@ -283,7 +284,7 @@ if __name__=='__main__':
 	RepFluxInData	= env.get_element("RepFluxInTmp")
 
 	''' MODE DEBUG '''
-	DEBUG = 0
+	DEBUG = 1
 	if not os.path.isdir(RepFluxInData):
 		os.makedirs(RepFluxInData, 0777)
 	now 			= datetime.now()
